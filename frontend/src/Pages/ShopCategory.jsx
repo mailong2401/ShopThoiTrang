@@ -10,10 +10,10 @@ export const ShopCategory = (props) => {
       <img className="shopcategory-banner" src={props.banner} alt="" />
       <div className="shopcatelory-indexSort">
         <p>
-          <span>showing 1-12</span> out of 36 products
+          <span>Hiển thị 1-12</span> trong tổng số 36 sản phẩm
         </p>
         <div className="shopcategory-sort">
-          Sort by <img src={prodown_icon} alt="" />
+          Sắp xếp theo <img src={prodown_icon} alt="" />
         </div>
       </div>
       <div className="shopcategory-products">

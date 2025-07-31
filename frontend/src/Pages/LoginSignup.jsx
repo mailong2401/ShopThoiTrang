@@ -33,19 +33,22 @@ export const LoginSignup = () => {
   return (
     <div ref={vantaRef} className="loginsignup" style={{ minHeight: "100vh" }}>
       <div className="loginsignup-container">
-        <h1>Sign Up</h1>
+        <h1>ĐĂNG KÝ</h1>
         <div className="loginsignup-fields">
-          <input type="text" placeholder="Your name" />
-          <input type="email" placeholder="Email Address" />
-          <input type="password" placeholder="Password" />
+          <input type="text" placeholder="Tên của bạn" />
+          <input type="email" placeholder="Địa chỉa email" />
+          <input type="password" placeholder="Mật Khẩu" />
         </div>
         <button>Continue</button>
         <p className="loginsignup-login">
-          Already have an account? <span>Login here </span>
+          Bạn đã có tài khoản? <span>Đăng nhập</span>
         </p>
         <div className="loginsignup-agree">
           <input type="checkbox" name="" />
-          <p>By continuing, I agree to the terms of use & privacy policy.</p>
+          <p>
+            Bằng cách tiếp tục, tôi đồng ý với các điều khoản sử dụng và chính
+            sách bảo mật.
+          </p>
         </div>
       </div>
     </div>

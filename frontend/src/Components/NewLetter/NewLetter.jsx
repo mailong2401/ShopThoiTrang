@@ -4,11 +4,11 @@ import "./NewLetter.css";
 const NewLetter = () => {
   return (
     <div className="new-letter">
-      <h1>Get Exclusive Ofeers On Your Email</h1>
-      <p>Subcribe to our newletter and stay updated</p>
+      <h1>Nhận ưu đãi độc quyền qua email của bạn</h1>
+      <p>Đăng ký nhận bản tin của chúng tôi và cập nhật thông tin</p>
       <div>
-        <input type="email" name="" value="" placeholder="Your Email id" />
-        <button>Subcribe</button>
+        <input type="email" name="" value="" placeholder="Nhập email của bạn" />
+        <button>Đăng ký</button>
       </div>
     </div>
   );

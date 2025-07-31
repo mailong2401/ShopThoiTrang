@@ -8,17 +8,17 @@ export const Hero = () => {
   return (
     <div className="hero">
       <div className="hero-left">
-        <h2>NEEW ARRIVALS ONLY</h2>
+        <h2>CHỈ NHẬN KHÁCH ĐẾN MỚI</h2>
         <div>
           <div className="hero-hand-icon">
-            <p>new</p>
+            <p>mới</p>
             <img src={hand_icon} alt="" />
           </div>
-          <p>collections</p>
-          <p>for everyone</p>
+          <p>bộ sưu tầm</p>
+          <p>dành cho mọi người</p>
         </div>
         <div className="hero-latest-btn">
-          <div>Latest Collections</div>
+          <div>Bộ sưu tập mới nhất</div>
           <img src={arrow_icon} alt="" />
         </div>
       </div>

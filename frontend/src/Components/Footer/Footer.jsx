@@ -13,11 +13,11 @@ const Footer = () => {
         <p>SHOPPER</p>
       </div>
       <ul className="footer-links">
-        <li>Company</li>
-        <li>Products</li>
-        <li>Offices</li>
-        <li>About</li>
-        <li>Contact</li>
+        <li>Công ty</li>
+        <li>Sản phẩm</li>
+        <li>Văn phòng</li>
+        <li>Giới thiệu</li>
+        <li>Liên hệ</li>
       </ul>
       <div className="footer-social-icon">
         <div className="footer-icons-container">
