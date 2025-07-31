@@ -1,5 +1,4 @@
 import React from "react";
-import Footer from "../Components/Footer/Footer";
 import { Hero } from "../Components/Hero/Hero";
 import NewCollections from "../Components/NewCollections/NewCollections";
 import NewLetter from "../Components/NewLetter/NewLetter";
