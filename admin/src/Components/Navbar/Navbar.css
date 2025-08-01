@@ -1,0 +1,39 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 60px;
+  box-shadow: 0 1px 3px -2px #000;
+  margin-bottom: 1px;
+  background: #25253c;
+}
+.nav-profile {
+  width: 60px;
+  height: 60px;
+  object-fit: cover; /* giúp ảnh không bị méo */
+  border-radius: 50%;
+}
+
+.navbar-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.shopper {
+  font-size: 37px;
+  font-weight: 600;
+  color: white;
+}
+
+.admin-panel {
+  color: #d25d5d;
+  font-size: 15px;
+  font-weight: 400;
+}
