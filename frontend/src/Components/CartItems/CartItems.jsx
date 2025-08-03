@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { ShopContext } from "../../Context/ShopContext";
 import "./CartItems.css";
 import remove_icon from "../Assets/cart_cross_icon.png";
+import { Link } from "react-router-dom";
 
 const CartItems = () => {
   const { getTotalCartAmount, all_product, cartItems, removeFromCart } =
@@ -61,7 +62,9 @@ const CartItems = () => {
               <h3>${getTotalCartAmount()}</h3>
             </div>
           </div>
-          <button>PROCEED TO CHECKOUT</button>
+          <Link to="/checkout">
+            <button className="btn btn-primary">PROCEED TO CHECKOUT</button>
+          </Link>
         </div>
         <div className="cartitems-promocode">
           <p>Nếu bạn có mã khuyến mại, hãy nhập vào đây</p>

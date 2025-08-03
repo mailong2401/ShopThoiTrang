@@ -1,0 +1,160 @@
+.checkout-container {
+  max-width: 100%;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 10px 40px;
+  font-family: "Roboto", sans-serif;
+  color: #212529;
+}
+
+.checkout-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.align-items-center {
+  display: flex;
+}
+
+.left-section {
+  flex: 1;
+  min-width: 300px;
+  max-width: 45%;
+}
+
+.right-section {
+  flex: 1;
+  min-width: 300px;
+  max-width: 50%;
+}
+
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: inline-block;
+  font-size: 15px;
+}
+
+input.form-control,
+select.form-select,
+textarea.form-control {
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.2s;
+}
+
+input.form-control:focus,
+select.form-select:focus,
+textarea.form-control:focus {
+  border-color: #86b7fe;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.img-fluid {
+  border-radius: 12px;
+  max-height: 100px;
+  object-fit: cover;
+}
+
+.payment-logos img,
+.bank-logo {
+  height: 40px;
+  margin: 6px;
+  object-fit: contain;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 5px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.payment-logos img:hover {
+  transform: scale(1.05);
+}
+
+#map {
+  height: 250px;
+  border-radius: 12px;
+  margin-top: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.btn-primary {
+  padding: 14px;
+  font-size: 17px;
+  border-radius: 10px;
+  font-weight: 600;
+  background-color: #0d6efd;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+.shadow-sm {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.list-unstyled li {
+  padding: 8px 0;
+  font-size: 15px;
+}
+
+h2 {
+  font-weight: 700;
+  margin-bottom: 30px;
+  font-size: 26px;
+  text-align: center;
+}
+
+h4 {
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+h5 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.text-muted {
+  font-size: 14px;
+}
+
+@media screen and (max-width: 768px) {
+  .checkout-grid {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .left-section,
+  .right-section {
+    max-width: 100%;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: auto;
+  }
+
+  .btn-primary {
+    font-size: 16px;
+  }
+}
