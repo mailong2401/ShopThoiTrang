@@ -130,6 +130,80 @@ app.post("/removeproduct", async (req, res) => {
   });
 });
 
+const fetchUser = async (req, res, next) => {
+  const token = req.header("auth-token");
+  if (!token) {
+    res.status(401).send({ error: "Please authenticate using valid token" });
+  } else {
+    try {
+      const data = jwt.verify(token, "secret_ecom");
+      req.user = data.user;
+      next();
+    } catch (error) {
+      res
+        .status(401)
+        .send({ error: "Please authenticate using a valid token" });
+    }
+  }
+};
+
+// add to cart
+app.post("/addtocart", fetchUser, async (req, res) => {
+  let userData = await Users.findOne({ _id: req.user.id });
+  userData.cartData[req.body.itemId] += 1;
+  await Users.findOneAndUpdate(
+    { _id: req.user.id },
+    { cartData: userData.cartData },
+  );
+  res.send("Added");
+});
+
+app.post("/removefromcart", fetchUser, async (req, res) => {
+  console.log("removed", req.body.itemId);
+  let userData = await Users.findOne({ _id: req.user.id });
+  if (userData.cartData[req.body.itemId] > 0) {
+    userData.cartData[req.body.itemId] -= 1;
+  }
+  await Users.findOneAndUpdate(
+    { _id: req.user.id },
+    { cartData: userData.cartData },
+  );
+  res.send("Remove");
+});
+
+// get cart
+app.post("/getcart", fetchUser, async (req, res) => {
+  console.log("GetCart");
+  let userData = await Users.findOne({ _id: req.user.id });
+  res.json(userData.cartData);
+}); // popular in women
+
+app.get("/popularinwomen", async (req, res) => {
+  try {
+    let popular_in_women = await Product.find({ category: "women" }).limit(4);
+    console.log("Popular in women fetched");
+    res.send(popular_in_women);
+  } catch (error) {
+    console.error("Error fetching popular products:", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// new collection
+app.get("/newcollection", async (req, res) => {
+  try {
+    let newcollection = await Product.find({})
+      .sort({ date: -1 }) // Mới nhất trước
+      .limit(-8);
+    console.log("NewCollection Fetched");
+    res.send(newcollection);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch new collection" });
+  }
+});
+
 // Creating API for getting all product
 app.get("/allproducts", async (req, res) => {
   let products = await Product.find({});
