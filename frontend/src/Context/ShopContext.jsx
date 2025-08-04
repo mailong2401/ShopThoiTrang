@@ -13,93 +13,223 @@ const getDefaultCart = () => {
 const ShopContextProvider = (props) => {
   const [all_product, setAll_Product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState({
+    products: true,
+    cart: true,
+    orders: true,
+  });
+  const [error, setError] = useState(null);
 
+  // Fetch data on component mount
   useEffect(() => {
-    fetch("http://localhost:4000/allproducts")
-      .then((response) => response.json())
-      .then((data) => setAll_Product(data));
+    const fetchInitialData = async () => {
+      try {
+        // Fetch products
+        const productsResponse = await fetch(
+          "http://localhost:4000/allproducts",
+        );
+        const productsData = await productsResponse.json();
+        setAll_Product(productsData);
+        setLoading((prev) => ({ ...prev, products: false }));
 
-    if (localStorage.getItem("auth-token")) {
-      fetch("http://localhost:4000/getcart", {
-        method: "POST",
-        headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
-          "Content-Type": "application/json",
-        },
-        body: "",
-      })
-        .then((respone) => respone.json())
-        .then((data) => setCartItems(data));
-    }
+        // Fetch cart and orders if authenticated
+        if (localStorage.getItem("auth-token")) {
+          const cartResponse = await fetch("http://localhost:4000/getcart", {
+            method: "POST",
+            headers: {
+              "auth-token": localStorage.getItem("auth-token"),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({}),
+          });
+          const cartData = await cartResponse.json();
+          setCartItems(cartData);
+          setLoading((prev) => ({ ...prev, cart: false }));
+
+          await fetchUserOrders();
+        }
+      } catch (err) {
+        setError(err.message);
+        setLoading({ products: false, cart: false, orders: false });
+      }
+    };
+
+    fetchInitialData();
   }, []);
 
-  const addToCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-    console.log(cartItems);
-    if (localStorage.getItem("auth-token")) {
-      fetch("http://localhost:4000/addtocart", {
-        method: "POST",
+  // Fetch user orders
+  const fetchUserOrders = async () => {
+    try {
+      setLoading((prev) => ({ ...prev, orders: true }));
+      const response = await fetch("http://localhost:4000/myorders", {
+        method: "GET",
         headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
+          "auth-token": localStorage.getItem("auth-token"),
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ itemId: itemId }),
-      })
-        .then((respone) => respone.json())
-        .then((data) => console.log(data));
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setOrders(data.orders);
+      }
+      setLoading((prev) => ({ ...prev, orders: false }));
+    } catch (err) {
+      setError(err.message);
+      setLoading((prev) => ({ ...prev, orders: false }));
     }
+  };
+
+  // Place order function
+  const placeOrder = async () => {
+    try {
+      setLoading((prev) => ({ ...prev, orders: true }));
+      const response = await fetch("http://localhost:4000/placeorder", {
+        method: "POST",
+        headers: {
+          "auth-token": localStorage.getItem("auth-token"),
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to place order");
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setCartItems(getDefaultCart());
+        await fetchUserOrders();
+        return { success: true, orderId: data.orderId };
+      }
+      throw new Error(data.message || "Order placement failed");
+    } catch (err) {
+      setError(err.message);
+      return { success: false, message: err.message };
+    } finally {
+      setLoading((prev) => ({ ...prev, orders: false }));
+    }
+  };
+
+  // Confirm delivery function
+  const confirmDelivery = async (orderId) => {
+    try {
+      setLoading((prev) => ({ ...prev, orders: true }));
+      const response = await fetch("http://localhost:4000/confirmdelivery", {
+        method: "POST",
+        headers: {
+          "auth-token": localStorage.getItem("auth-token"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to confirm delivery");
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        await fetchUserOrders();
+        return { success: true };
+      }
+      throw new Error(data.message || "Delivery confirmation failed");
+    } catch (err) {
+      setError(err.message);
+      return { success: false, message: err.message };
+    } finally {
+      setLoading((prev) => ({ ...prev, orders: false }));
+    }
+  };
+
+  // Cart functions
+  const updateCartOnServer = async (itemId, quantityChange) => {
+    if (!localStorage.getItem("auth-token")) return;
+
+    try {
+      const endpoint = quantityChange > 0 ? "addtocart" : "removefromcart";
+      await fetch(`http://localhost:4000/${endpoint}`, {
+        method: "POST",
+        headers: {
+          "auth-token": localStorage.getItem("auth-token"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ itemId }),
+      });
+    } catch (err) {
+      // Rollback local changes if server update fails
+      setCartItems((prev) => ({
+        ...prev,
+        [itemId]: prev[itemId] - quantityChange,
+      }));
+      setError("Failed to sync cart with server");
+    }
+  };
+
+  const addToCart = (itemId) => {
+    setCartItems((prev) => {
+      const newCart = { ...prev, [itemId]: prev[itemId] + 1 };
+      updateCartOnServer(itemId, 1);
+      return newCart;
+    });
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-    if (localStorage.getItem("auth-token")) {
-      fetch("http://localhost:4000/removefromcart", {
-        method: "POST",
-        headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ itemId: itemId }),
-      })
-        .then((respone) => respone.json())
-        .then((data) => console.log(data));
-    }
+    setCartItems((prev) => {
+      if (prev[itemId] > 0) {
+        const newCart = { ...prev, [itemId]: prev[itemId] - 1 };
+        updateCartOnServer(itemId, -1);
+        return newCart;
+      }
+      return prev;
+    });
   };
 
+  // Calculation functions
   const getTotalCartItems = () => {
-    let totalAmount = 0;
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        totalAmount += cartItems[item];
-      }
-    }
-    return totalAmount;
+    return Object.values(cartItems).reduce(
+      (sum, quantity) => sum + quantity,
+      0,
+    );
   };
 
   const getTotalCartAmount = () => {
-    let totalAmount = 0;
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        let itemInfo = all_product.find(
-          (product) => product.id === Number(item),
+    return Object.entries(cartItems).reduce((sum, [itemId, quantity]) => {
+      if (quantity > 0) {
+        const itemInfo = all_product.find(
+          (product) => product.id === Number(itemId),
         );
-        totalAmount += itemInfo.new_price * cartItems[item];
+        return sum + (itemInfo?.new_price || 0) * quantity;
       }
-    }
-    return totalAmount;
+      return sum;
+    }, 0);
   };
 
+  const clearError = () => setError(null);
+
   const contextValue = {
-    getTotalCartItems,
-    getTotalCartAmount,
     all_product,
     cartItems,
+    orders,
+    loading,
+    error,
     addToCart,
     removeFromCart,
+    getTotalCartItems,
+    getTotalCartAmount,
+    placeOrder,
+    confirmDelivery,
+    fetchUserOrders,
+    clearError,
   };
+
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}

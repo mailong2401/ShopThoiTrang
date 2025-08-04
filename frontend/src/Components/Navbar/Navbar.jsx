@@ -97,7 +97,9 @@ const Navbar = () => {
             <button>Đăng nhập</button>
           </Link>
         )}
-
+        <Link to="/delivered">
+          <img src={cart_icon} alt="" />
+        </Link>
         <Link to="/cart">
           <img src={cart_icon} alt="" />
         </Link>

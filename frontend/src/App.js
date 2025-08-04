@@ -11,6 +11,7 @@ import men_banner from "./Components/Assets/banner_mens.png";
 import women_banner from "./Components/Assets/banner_women.png";
 import kid_banner from "./Components/Assets/banner_kids.png";
 import CheckoutPage from "./Pages/CheckoutPage";
+import Delivered from "./Pages/Delivered";
 function App() {
   return (
     <div>
@@ -18,6 +19,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="/delivered" element={<Delivered />} />
           <Route path="/" element={<Shop />} />
           <Route
             path="/mens"

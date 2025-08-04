@@ -27,6 +27,8 @@ const CheckoutPage = () => {
   const { getTotalCartAmount, all_product, cartItems, removeFromCart } =
     useContext(ShopContext);
 
+  const { placeOrder } = useContext(ShopContext);
+
   const [distanceKm, setDistanceKm] = useState(null);
 
   useEffect(() => {
@@ -36,7 +38,14 @@ const CheckoutPage = () => {
     }).addTo(map);
     L.marker([10.762622, 106.660172]).addTo(map);
   }, []);
-
+  const handlePlaceOrder = async () => {
+    const result = await placeOrder();
+    if (result.success) {
+      alert("Order placed successfully!");
+    } else {
+      alert(`Error: ${result.message}`);
+    }
+  };
   const handlePaymentChange = (event) => {
     const value = event.target.value;
     document
@@ -342,7 +351,14 @@ const CheckoutPage = () => {
                 </li>
               </ul>
             </div>
-            <button className="btn btn-primary w-100 mt-3">Đặt hàng</button>
+            <button
+              className="btn btn-primary w-100 mt-3"
+              onClick={() => {
+                handlePlaceOrder();
+              }}
+            >
+              Đặt hàng
+            </button>
           </div>
         </div>
       </div>
