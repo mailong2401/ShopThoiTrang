@@ -7,17 +7,35 @@ const Delivered = () => {
   const { orders, confirmDelivery } = useContext(ShopContext);
 
   const handleReturn = async (orderId) => {
-    const confirmation = window.confirm(
-      "Bạn có chắc chắn muốn hoàn trả đơn hàng này?",
-    );
+    const confirmation = window.confirm("Bạn có chắc đã nhận đơn hàng này?");
     if (confirmation) {
       const result = await confirmDelivery(orderId);
       if (result.success) {
-        alert("Yêu cầu hoàn trả đã được ghi nhận!");
+        alert("Chúc mừng bạn đã nhận được hàng thành công!");
+        // Cập nhật lại danh sách đơn hàng để hiển thị ngày nhận hàng
+        window.location.reload(); // Hoặc sử dụng state update nếu bạn đã xử lý
       } else {
         alert(`Lỗi: ${result.message}`);
       }
     }
+  };
+
+  const handleRefund = async () => {
+    const confirmation = window.confirm(
+      "Bạn có chắc chắn muốn hoàn trả đơn hàng này?",
+    );
+    if (confirmation) {
+      alert("Yêu cầu hoàn trả đã được ghi nhận!");
+    }
+  };
+
+  // Hàm định dạng ngày tháng
+  const formatDate = (dateString) => {
+    if (!dateString) return "Chưa nhận hàng";
+    const date = new Date(dateString);
+    return (
+      date.toLocaleDateString("vi-VN") + " " + date.toLocaleTimeString("vi-VN")
+    );
   };
 
   return (
@@ -30,6 +48,8 @@ const Delivered = () => {
         <p>Số Lượng</p>
         <p>Tổng</p>
         <p>Ngày Đặt</p>
+        <p>Ngày Nhận</p>
+        <p>Trạng Thái</p>
         <p>Thao Tác</p>
       </div>
       <hr />
@@ -59,11 +79,10 @@ const Delivered = () => {
                     {(item.details.price * item.quantity).toLocaleString()}đ
                   </p>
                   <p>{order.formattedDate}</p>
+                  <p>{formatDate(order.deliveryDate)}</p>
+                  <p>{order.isDelivered ? "Đã nhận hàng" : "Đang giao"}</p>
                   {order.isDelivered ? (
-                    <button
-                      className="Button-Return"
-                      onClick={() => handleReturn(order._id)}
-                    >
+                    <button className="Button-Return" onClick={handleRefund}>
                       Hoàn Trả
                     </button>
                   ) : (
@@ -77,12 +96,6 @@ const Delivered = () => {
                 </div>
               ),
             )}
-            <div className="order-total">
-              <p>Tổng đơn hàng: {order.totalAmount.toLocaleString()}đ</p>
-              <p>
-                Trạng thái: {order.isDelivered ? "Đã nhận hàng" : "Đang giao"}
-              </p>
-            </div>
             <hr />
           </div>
         ))

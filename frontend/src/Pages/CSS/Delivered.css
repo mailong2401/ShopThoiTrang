@@ -10,7 +10,7 @@
 
 .cartitems-format-main {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   align-items: center;
   gap: 75px;
   padding: 20px 0px;
@@ -31,10 +31,23 @@
   border-radius: 10px;
   cursor: pointer;
 }
+.Button-Confirm {
+  color: white;
+  background: #8aa624;
+  border-radius: 6px;
+  border: none;
+}
+
+.Button-Return {
+  color: white;
+  background: #d3af37;
+  border-radius: 6px;
+  border: none;
+}
 
 .cartitems-format {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 75px;
 }
 

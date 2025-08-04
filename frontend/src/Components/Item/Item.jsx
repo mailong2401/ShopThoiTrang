@@ -10,8 +10,12 @@ export const Item = (props) => {
       </Link>
       <p>{props.name}</p>
       <div className="item-prices">
-        <div className="item-price-new">${props.new_price}</div>
-        <div className="item-price-old">${props.old_price}</div>
+        <div className="item-price-new">
+          {props.new_price.toLocaleString()}đ
+        </div>
+        <div className="item-price-old">
+          {props.old_price.toLocaleString()}đ
+        </div>
       </div>
     </div>
   );

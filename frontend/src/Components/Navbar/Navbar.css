@@ -73,6 +73,20 @@
   background: #f3f3f3;
 }
 
+.user-greeting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.icon_nav {
+  width: 40px;
+}
+
 .nav-cart-count {
   width: 22px;
   height: 22px;

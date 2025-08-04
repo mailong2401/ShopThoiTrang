@@ -5,10 +5,11 @@ import cart_icon from "../Assets/cart_icon.png";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
 import nav_dropdown from "../Assets/nav_dropdown.png";
+import delivered_icon from "../Assets/delivered.png";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
-  const { getTotalCartItems } = useContext(ShopContext);
+  const { getTotalCartItems, user } = useContext(ShopContext);
   const menuRef = useRef();
 
   const dropdown_toggle = (e) => {
@@ -84,24 +85,27 @@ const Navbar = () => {
       </ul>
       <div className="nav-login-cart">
         {localStorage.getItem("auth-token") ? (
-          <button
-            onClick={() => {
-              localStorage.removeItem("auth-token");
-              window.location.replace("/");
-            }}
-          >
-            Đăng xuất
-          </button>
+          <div className="user-greeting">
+            <span>Xin chào, {user?.name || "Khách"}</span>
+            <button
+              onClick={() => {
+                localStorage.removeItem("auth-token");
+                window.location.replace("/");
+              }}
+            >
+              Đăng xuất
+            </button>
+          </div>
         ) : (
           <Link to="/login">
             <button>Đăng nhập</button>
           </Link>
         )}
         <Link to="/delivered">
-          <img src={cart_icon} alt="" />
+          <img src={delivered_icon} alt="" className="icon_nav" />
         </Link>
         <Link to="/cart">
-          <img src={cart_icon} alt="" />
+          <img src={cart_icon} alt="" className="icon_nav" />
         </Link>
 
         <div className="nav-cart-count">{getTotalCartItems()}</div>

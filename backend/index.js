@@ -420,7 +420,6 @@ app.post("/confirmdelivery", fetchUser, async (req, res) => {
   try {
     const { orderId } = req.body;
 
-    // Kiểm tra đơn hàng có thuộc về user này không
     const order = await Order.findOne({
       _id: orderId,
       userId: req.user.id,
@@ -433,20 +432,32 @@ app.post("/confirmdelivery", fetchUser, async (req, res) => {
       });
     }
 
-    // Cập nhật trạng thái đã nhận hàng
+    // Cập nhật trạng thái và ngày nhận hàng
     order.isDelivered = true;
-    order.deliveryDate = new Date();
+    order.deliveryDate = new Date(); // Thêm dòng này
     await order.save();
-
-    // Hoặc xóa đơn hàng nếu bạn muốn
-    // await Order.findByIdAndDelete(orderId);
 
     res.json({
       success: true,
       message: "Xác nhận nhận hàng thành công",
+      deliveryDate: order.deliveryDate, // Trả về ngày nhận hàng
     });
   } catch (error) {
     console.error("Lỗi khi xác nhận nhận hàng:", error);
     res.status(500).json({ success: false, message: "Lỗi server" });
+  }
+});
+
+app.post("/getuser", fetchUser, async (req, res) => {
+  try {
+    const user = await Users.findById(req.user.id).select("-password"); // Không trả về password
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 });

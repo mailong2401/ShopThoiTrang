@@ -136,6 +136,9 @@ const CheckoutPage = () => {
             />
 
             <div id="map"></div>
+
+            <span>Khoảng cách giao hàng: </span>
+            <span>{distanceKm ? `${distanceKm} km` : "Chưa có"}</span>
           </div>
           <div className="form-section">
             <label className="form-label">Hình thức vận chuyển</label>
@@ -231,33 +234,6 @@ const CheckoutPage = () => {
           </div>
 
           <div className="form-section">
-            <label htmlFor="productVoucher" className="form-label">
-              Voucher giảm giá sản phẩm
-            </label>
-            <select className="form-select" id="productVoucher">
-              <option selected disabled>
-                Chọn voucher...
-              </option>
-              <option value="10">Giảm 10%</option>
-              <option value="20">Giảm 20%</option>
-              <option value="50k">Giảm 50.000đ</option>
-            </select>
-          </div>
-          <div className="form-section">
-            <label htmlFor="shippingVoucher" className="form-label">
-              Voucher giảm phí vận chuyển
-            </label>
-            <select className="form-select" id="shippingVoucher">
-              <option selected disabled>
-                Chọn voucher...
-              </option>
-              <option value="freeship">Freeship toàn quốc</option>
-              <option value="10k">Giảm 10.000đ phí ship</option>
-              <option value="20k">Giảm 20.000đ phí ship</option>
-            </select>
-          </div>
-
-          <div className="form-section">
             <label className="form-label">Phương thức thanh toán</label>
             <div className="payment-method" onChange={handlePaymentChange}>
               <div className="form-check">
@@ -346,8 +322,8 @@ const CheckoutPage = () => {
                 </li>
 
                 <li className="d-flex justify-content-between text-danger fw-bold">
-                  <span>Khoảng cách giao hàng</span>
-                  <span>{distanceKm ? `${distanceKm} km` : "Chưa có"}</span>
+                  <span>Tổng tiền</span>
+                  <span>{getTotalCartAmount().toLocaleString()}đ</span>
                 </li>
               </ul>
             </div>

@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./RelatedProducts.css";
-import data_product from "../Assets/data";
 import { Item } from "../Item/Item";
 
 const RelatedProducts = () => {
+  const [popularinwomen, setPopularInWomen] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:4000/popularinwomen")
+      .then((response) => response.json()) // ✅ return kết quả
+      .then((data) => setPopularInWomen(data))
+      .catch((error) => console.error("Lỗi khi gọi API:", error));
+  }, []); // ✅ thêm [] để chỉ gọi 1 lần khi component mount
+
   return (
     <div className="relatedproducts">
       <h1>Related Products</h1>
       <hr />
       <div className="relatedproducts-item">
-        {data_product.map((item, i) => {
+        {popularinwomen.map((item, i) => {
           return (
             <Item
               key={i}
