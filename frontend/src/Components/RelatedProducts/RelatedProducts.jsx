@@ -14,7 +14,7 @@ const RelatedProducts = () => {
 
   return (
     <div className="relatedproducts">
-      <h1>Related Products</h1>
+      <h1>Sản phẩm liên quan</h1>
       <hr />
       <div className="relatedproducts-item">
         {popularinwomen.map((item, i) => {

@@ -11,7 +11,7 @@ const ProductDisplay = (props) => {
     <div className="productdisplay">
       <div className="productdisplay-left">
         <div className="productdisplay-img-list">
-          <img src={product.image} alt="" />
+          <img Related Productssrc={product.image} alt="" />
           <img src={product.image} alt="" />
           <img src={product.image} alt="" />
           <img src={product.image} alt="" />
@@ -44,7 +44,7 @@ const ProductDisplay = (props) => {
           tay ngắn. Được mặc như một áo lót dưới hoặc ngoài áo khác.
         </div>
         <div className="productdisplay-right-size">
-          <h1>Select size</h1>
+          <h1>Chọn kích thước</h1>
           <div className="productdisplay-right-sizes">
             <div>S</div>
             <div>M</div>
@@ -60,12 +60,12 @@ const ProductDisplay = (props) => {
           ADD TO CART
         </button>
         <p className="productdisplay-right-category">
-          <span>Category :</span>
-          Women, T-Shirt, Crop Top
+          <span>Loại :</span>
+          Phụ nữ, Áo phông, Áo crop top
         </p>
         <p className="productdisplay-right-category">
-          <span>Tags :</span>
-          Morden, Latest
+          <span>Thẻ :</span>
+          Morden, Mới nhất
         </p>
       </div>
     </div>

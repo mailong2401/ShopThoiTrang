@@ -186,7 +186,7 @@ const CheckoutPage = () => {
                   defaultChecked
                 />
                 <label className="form-check-label" htmlFor="express">
-                  Giao hỏa tốc (dưới 2h)
+                  Giao Hàng Nhanh
                 </label>
               </div>
               <div className="form-check mt-2">
@@ -197,7 +197,7 @@ const CheckoutPage = () => {
                   id="grab"
                 />
                 <label className="form-check-label" htmlFor="grab">
-                  Giao qua Grab
+                  Giao Hàng Tiết Kiệm
                 </label>
               </div>
               <div className="form-check mt-2">
@@ -208,7 +208,7 @@ const CheckoutPage = () => {
                   id="standard"
                 />
                 <label className="form-check-label" htmlFor="standard">
-                  Giao tiêu chuẩn (1-2 ngày)
+                  J&T Express
                 </label>
               </div>
             </div>

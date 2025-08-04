@@ -10,12 +10,12 @@ const CartItems = () => {
   return (
     <div className="cartitems">
       <div className="cartitems-format-main">
-        <p>Products</p>
-        <p>Title</p>
-        <p>Price</p>
-        <p>Quantity</p>
-        <p>Total</p>
-        <p>Remove</p>
+        <p>Sản phẩm</p>
+        <p>Tên</p>
+        <p>Giá</p>
+        <p>Số lượng</p>
+        <p>Tổng</p>
+        <p>Xóa</p>
       </div>
       <hr />
       {all_product.map((e) => {
@@ -25,11 +25,11 @@ const CartItems = () => {
               <div className="cartitems-format cartitems-format-main">
                 <img className="carticon-product-icon" src={e.image} alt="" />
                 <p>{e.name}</p>
-                <p>${e.new_price}</p>
+                <p>{e.new_price.toLocaleString()}đ</p>
                 <button className="cartitems-quantity">
                   {cartItems[e.id]}
                 </button>
-                <p>{e.new_price * cartItems[e.id]}</p>
+                <p>{(e.new_price * cartItems[e.id]).toLocaleString()}đ</p>
                 <img
                   className="cartitems-remove-icon"
                   src={remove_icon}
@@ -48,29 +48,29 @@ const CartItems = () => {
           <h1>cart Totals</h1>
           <div>
             <div className="cartitems-total-item">
-              <p>Subtatal</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>Tạm tính</p>
+              <p>{getTotalCartAmount().toLocaleString()}đ</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
               <p>Phí vận chuyển</p>
-              <p>Free</p>
+              <p>Chưa có</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
-              <h3>Total</h3>
-              <h3>${getTotalCartAmount()}</h3>
+              <h3>Tổng</h3>
+              <h3>{getTotalCartAmount().toLocaleString()}đ</h3>
             </div>
           </div>
           <Link to="/checkout">
-            <button className="btn btn-primary">PROCEED TO CHECKOUT</button>
+            <button className="btn btn-primary">Thanh toán</button>
           </Link>
         </div>
         <div className="cartitems-promocode">
           <p>Nếu bạn có mã khuyến mại, hãy nhập vào đây</p>
           <div className="cartitems-promobox">
-            <input type="text" placeholder="promo code" />
-            <button>Submit</button>
+            <input type="text" placeholder="mã khuyến mãi" />
+            <button>Áp dụng</button>
           </div>
         </div>
       </div>
