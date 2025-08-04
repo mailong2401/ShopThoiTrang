@@ -4,6 +4,33 @@
   background: #fce3fe;
   padding-top: 100px;
 }
+.google-login-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.or-divider {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.google-login-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+/* Hoặc bạn có thể style button theo ý muốn */
+.google-login-container button {
+  background: #4285f4;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
 
 .loginsignup-container {
   width: 580px;

@@ -1,16 +1,43 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./CSS/LoginSignup.css";
 import * as THREE from "three";
-import NET from "vanta/src/vanta.net"; // ✅ Import đúng
+import NET from "vanta/src/vanta.net";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 export const LoginSignup = () => {
   const [state, setState] = useState("Đăng nhập");
-
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     email: "",
   });
+
+  const responseGoogle = async (response) => {
+    try {
+      const res = await fetch("http://localhost:4000/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: response.credential,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("auth-token", data.token);
+        window.location.replace("/");
+      } else {
+        alert(data.errors || "Đăng nhập bằng Google thất bại");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Có lỗi xảy ra khi đăng nhập");
+    }
+  };
 
   const Login = async () => {
     console.log("Login Func", formData);
@@ -107,7 +134,7 @@ export const LoginSignup = () => {
             value={formData.email}
             onChange={changeHandler}
             type="email"
-            placeholder="Địa chỉa email"
+            placeholder="Địa chỉ email"
           />
           <input
             name="password"
@@ -124,6 +151,25 @@ export const LoginSignup = () => {
         >
           Continue
         </button>
+
+        {/* Thêm phần đăng nhập bằng Google ở đây */}
+        <div className="google-login-container">
+          <p className="or-divider">Hoặc đăng nhập bằng</p>
+          <GoogleOAuthProvider clientId="244449280138-bsrd3pjtgul7if36r7i8ttnmarcqsnaf.apps.googleusercontent.com">
+            <GoogleLogin
+              onSuccess={responseGoogle}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+              theme="filled_blue"
+              size="large"
+              text="continue_with"
+              shape="rectangular"
+              width="300"
+            />
+          </GoogleOAuthProvider>
+        </div>
+
         {state === "Đăng ký" ? (
           <p className="loginsignup-login">
             Bạn đã có tài khoản?{" "}

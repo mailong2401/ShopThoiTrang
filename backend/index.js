@@ -1,3 +1,4 @@
+require("dotenv").config(); // Thêm dòng này ở đầu file
 const port = 4000;
 const express = require("express");
 const app = express();
@@ -5,6 +6,8 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const jwt = require("jsonwebtoken");
 
@@ -459,5 +462,61 @@ app.post("/getuser", fetchUser, async (req, res) => {
     res.json({ success: true, user });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// Endpoint xử lý Google Sign-In từ frontend
+app.post("/auth/google", async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    // Xác minh token Google
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, name } = ticket.getPayload();
+
+    // Tìm hoặc tạo user
+    let user = await Users.findOne({ email });
+
+    if (!user) {
+      const cart = Array(300)
+        .fill(0)
+        .reduce((acc, _, i) => ({ ...acc, [i]: 0 }), {});
+
+      user = new Users({
+        name,
+        email,
+        password: "",
+        cartData: cart,
+      });
+      await user.save();
+    }
+
+    // Tạo JWT token
+    const authToken = jwt.sign(
+      { user: { id: user.id } },
+      process.env.JWT_SECRET || "secret_ecom",
+    );
+
+    res.json({
+      success: true,
+      token: authToken,
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Google auth error:", error);
+    res.status(401).json({
+      success: false,
+      errors: "Xác thực Google thất bại",
+    });
   }
 });
