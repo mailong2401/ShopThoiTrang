@@ -7,6 +7,7 @@ import { ShopContext } from "../Context/ShopContext";
 import logo_vcb from "../Components/Assets/logo_VCB.jpg";
 import logo_tcb from "../Components/Assets/logo_TCB.png";
 import logo_vtb from "../Components/Assets/logo_VTB.png";
+import { useNavigate } from "react-router-dom";
 
 function getDistance(lat1, lon1, lat2, lon2) {
   const toRad = (value) => (value * Math.PI) / 180;
@@ -26,10 +27,35 @@ function getDistance(lat1, lon1, lat2, lon2) {
 const CheckoutPage = () => {
   const { getTotalCartAmount, all_product, cartItems, removeFromCart } =
     useContext(ShopContext);
-
+  const navigate = useNavigate(); // Thêm hook này
   const { placeOrder } = useContext(ShopContext);
 
   const [distanceKm, setDistanceKm] = useState(null);
+
+  const handlePlaceOrder = async () => {
+    const fullName = document.getElementById("fullName").value.trim();
+    const phoneNumber = document.getElementById("phoneNumber").value.trim();
+    const address = document.getElementById("addressInput").value.trim();
+    const paymentMethod = document.querySelector(
+      'input[name="payment"]:checked',
+    );
+
+    // Kiểm tra thông tin
+    if (!fullName || !phoneNumber || !address || !paymentMethod) {
+      alert("⚠️ Bạn chưa nhập đủ thông tin bắt buộc!");
+      return;
+    }
+
+    // Gọi API đặt hàng
+    const result = await placeOrder();
+    if (result.success) {
+      alert("🎉 Chúc mừng bạn đã đặt hàng thành công!");
+      navigate("/"); // Chuyển hướng về trang chủ
+      // Bạn có thể điều hướng sang trang cảm ơn, hoặc reload
+    } else {
+      alert(`❌ Đặt hàng thất bại: ${result.message}`);
+    }
+  };
 
   useEffect(() => {
     const map = L.map("map").setView([10.8016363, 106.714465], 13);
@@ -38,14 +64,6 @@ const CheckoutPage = () => {
     }).addTo(map);
     L.marker([10.762622, 106.660172]).addTo(map);
   }, []);
-  const handlePlaceOrder = async () => {
-    const result = await placeOrder();
-    if (result.success) {
-      alert("Order placed successfully!");
-    } else {
-      alert(`Error: ${result.message}`);
-    }
-  };
   const handlePaymentChange = (event) => {
     const value = event.target.value;
     document
@@ -92,6 +110,22 @@ const CheckoutPage = () => {
       console.error("Lỗi khi gọi OpenCage API:", error);
     }
   };
+
+  // Calculate shipping fee based on distance
+  const calculateShippingFee = () => {
+    if (!distanceKm) return 0;
+
+    if (distanceKm < 10) {
+      return 0; // Free shipping
+    } else if (distanceKm >= 10 && distanceKm <= 100) {
+      return 25000; // 25,000đ
+    } else {
+      return 35000; // 35,000đ
+    }
+  };
+
+  const shippingFee = calculateShippingFee();
+  const totalAmount = getTotalCartAmount() + shippingFee;
 
   return (
     <div className="checkout-container">
@@ -206,14 +240,15 @@ const CheckoutPage = () => {
                       <div className="col-8 col-md-10">
                         <h5 className="mb-1">{e.name}</h5>
                         <p className="text-muted mb-1">
-                          Giá từng món: ${e.new_price}
+                          Giá từng món: {e.new_price.toLocaleString()}đ
                         </p>
                         <p className="mb-1">
                           Số lượng: <strong>{cartItems[e.id]}</strong>
                         </p>
                         <div className="d-flex justify-content-between align-items-center">
                           <span className="text-danger fw-bold">
-                            Tổng: ${e.new_price * cartItems[e.id]}
+                            Tổng: $
+                            {(e.new_price * cartItems[e.id]).toLocaleString()}đ
                           </span>
                           <img
                             className="cartitems-remove-icon"
@@ -314,16 +349,21 @@ const CheckoutPage = () => {
               <ul className="list-unstyled">
                 <li className="d-flex justify-content-between">
                   <span>Tạm tính</span>
-                  <span>199.000đ</span>
+                  <span>{getTotalCartAmount().toLocaleString()}đ</span>
                 </li>
                 <li className="d-flex justify-content-between">
                   <span>Phí vận chuyển</span>
-                  <span>25.000đ</span>
+                  <span>
+                    {shippingFee === 0
+                      ? "Miễn phí"
+                      : `${shippingFee.toLocaleString()}đ`}
+                    {distanceKm && ` (${distanceKm} km)`}
+                  </span>
                 </li>
 
                 <li className="d-flex justify-content-between text-danger fw-bold">
                   <span>Tổng tiền</span>
-                  <span>{getTotalCartAmount().toLocaleString()}đ</span>
+                  <span>{totalAmount.toLocaleString()}đ</span>
                 </li>
               </ul>
             </div>
