@@ -12,24 +12,44 @@ const Delivered = () => {
       const result = await confirmDelivery(orderId);
       if (result.success) {
         alert("Chúc mừng bạn đã nhận được hàng thành công!");
-        // Cập nhật lại danh sách đơn hàng để hiển thị ngày nhận hàng
-        window.location.reload(); // Hoặc sử dụng state update nếu bạn đã xử lý
+        window.location.reload();
       } else {
         alert(`Lỗi: ${result.message}`);
       }
     }
   };
 
-  const handleRefund = async () => {
+  const handleRefund = async (orderId) => {
     const confirmation = window.confirm(
       "Bạn có chắc chắn muốn hoàn trả đơn hàng này?",
     );
-    if (confirmation) {
-      alert("Yêu cầu hoàn trả đã được ghi nhận!");
+    if (!confirmation) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/orders/${orderId}/refund`,
+        {
+          method: "POST",
+          headers: {
+            "auth-token": localStorage.getItem("auth-token") || "",
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        alert("✅ Yêu cầu hoàn trả đã được ghi nhận!");
+        window.location.reload();
+      } else {
+        alert("❌ " + data.message);
+      }
+    } catch (error) {
+      console.error("Lỗi gửi yêu cầu hoàn hàng:", error);
+      alert("❌ Có lỗi xảy ra khi gửi yêu cầu hoàn trả.");
     }
   };
 
-  // Hàm định dạng ngày tháng
   const formatDate = (dateString) => {
     if (!dateString) return "Chưa nhận hàng";
     const date = new Date(dateString);
@@ -80,11 +100,60 @@ const Delivered = () => {
                   </p>
                   <p>{order.formattedDate}</p>
                   <p>{formatDate(order.deliveryDate)}</p>
-                  <p>{order.isDelivered ? "Đã nhận hàng" : "Đang giao"}</p>
+
+                  <p>
+                    {order.status === "return_requested"
+                      ? "Đang hoàn hàng"
+                      : order.isDelivered
+                        ? "Đã nhận hàng"
+                        : "Đang giao"}
+                  </p>
+
                   {order.isDelivered ? (
-                    <button className="Button-Return" onClick={handleRefund}>
-                      Hoàn Trả
-                    </button>
+                    (() => {
+                      const deliveryDate = new Date(order.deliveryDate);
+                      const now = new Date();
+                      const diffDays = Math.floor(
+                        (now - deliveryDate) / (1000 * 60 * 60 * 24),
+                      );
+                      const isRefundable = diffDays <= 10;
+
+                      if (order.status === "return_requested") {
+                        return (
+                          <button
+                            className="Button-Return"
+                            disabled
+                            style={{
+                              backgroundColor: "red",
+                              color: "white",
+                              cursor: "default",
+                              opacity: 1,
+                            }}
+                          >
+                            Đã yêu cầu
+                          </button>
+                        );
+                      }
+
+                      const handleRefundClick = async () => {
+                        if (!isRefundable) {
+                          alert("⚠️ Đơn hàng đã quá hạn 10 ngày");
+                        }
+                      };
+
+                      return (
+                        <button
+                          className="Button-Return"
+                          onClick={handleRefundClick}
+                          style={{
+                            opacity: isRefundable ? 1 : 0.5,
+                            cursor: "pointer",
+                          }}
+                        >
+                          Hoàn Trả
+                        </button>
+                      );
+                    })()
                   ) : (
                     <button
                       className="Button-Confirm"

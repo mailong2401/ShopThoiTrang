@@ -311,6 +311,49 @@ const Order = mongoose.model("Order", {
   deliveryDate: {
     type: Date,
   },
+  status: {
+    type: String,
+    enum: ["pending", "delivered", "return_requested"],
+    default: "pending",
+  },
+});
+
+app.post("/orders/:id/refund", fetchUser, async (req, res) => {
+  try {
+    const order = await Order.findOne({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Không tìm thấy đơn hàng" });
+    }
+
+    if (!order.isDelivered) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Đơn hàng chưa được giao" });
+    }
+
+    const deliveryDate = new Date(order.deliveryDate);
+    const now = new Date();
+    const diffDays = Math.floor((now - deliveryDate) / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 10) {
+      // Có thể log thêm cảnh báo nhưng vẫn cho phép hoàn trả nếu user đã xác nhận
+      console.log("⚠️ Yêu cầu hoàn hàng sau 10 ngày");
+    }
+
+    order.status = "return_requested";
+    await order.save();
+
+    res.json({ success: true, message: "Đã yêu cầu hoàn trả đơn hàng" });
+  } catch (error) {
+    console.error("Lỗi khi yêu cầu hoàn hàng:", error);
+    res.status(500).json({ success: false, message: "Lỗi server" });
+  }
 });
 
 app.post("/placeorder", fetchUser, async (req, res) => {
