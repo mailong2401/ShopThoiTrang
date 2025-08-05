@@ -137,8 +137,12 @@ const Delivered = () => {
 
                       const handleRefundClick = async () => {
                         if (!isRefundable) {
-                          alert("⚠️ Đơn hàng đã quá hạn 10 ngày");
+                          const confirmLate = window.confirm(
+                            "⚠️ Đơn hàng đã quá hạn 10 ngày. Bạn vẫn muốn yêu cầu hoàn trả?",
+                          );
+                          if (!confirmLate) return;
                         }
+                        await handleRefund(order._id);
                       };
 
                       return (
