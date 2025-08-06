@@ -3,7 +3,7 @@
   justify-content: space-around;
   padding: 16px;
   box-shadow: 0-1px 3px -2px black;
-  background: #25253c;
+  background: black;
   align-items: center;
 }
 
@@ -94,11 +94,16 @@
   justify-content: center;
   align-items: center;
   margin-top: -35px;
-  margin-left: -55px;
+  margin-left: 30px;
   border-radius: 11px;
   font-size: 14px;
   background: red;
   color: white;
+}
+
+.cart-icon-container {
+  position: relative;
+  display: inline-block;
 }
 
 .nav-dropdown {

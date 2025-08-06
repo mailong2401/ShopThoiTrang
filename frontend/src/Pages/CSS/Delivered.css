@@ -8,6 +8,7 @@
   border: 0;
 }
 
+
 .cartitems-format-main {
   display: grid;
   grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -43,6 +44,10 @@
   background: #d3af37;
   border-radius: 6px;
   border: none;
+  cursor: pointer;
+}
+.Button-Confirm{
+  cursor: pointer;
 }
 
 .cartitems-format {

@@ -126,7 +126,7 @@ const Delivered = () => {
                             style={{
                               backgroundColor: "red",
                               color: "white",
-                              cursor: "default",
+                              cursor: "pointer",
                               opacity: 1,
                             }}
                           >

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Hero.css";
 import hand_icon from "../Assets/hand_icon.png";
 import arrow_icon from "../Assets/arrow.png";
 import hero_image from "../Assets/hero_image.png";
 import { motion } from "framer-motion";
-import "../../Pages/CSS/WetEffect.css"
+import "../../Pages/CSS/WetEffect.css";
 
 export const Hero = () => {
   return (
@@ -54,27 +54,26 @@ export const Hero = () => {
               animate={{ color: ["#ff0000", "#00ff00", "#0000ff", "#ff00ff"] }}
               transition={{ repeat: Infinity, duration: 2 }}
             >
-              CHỈ NHẬN KHÁCH ĐẾN MỚI
+              CHÀO MỪNG NHỮNG KHÁCH MỚI ĐẾN
             </motion.h2>
             <div>
               <div className="hero-hand-icon">
                 <p>mới</p>
-                <img src={hand_icon} alt="" />
               </div>
               <p>bộ sưu tầm</p>
               <p>dành cho mọi người</p>
             </div>
 
             <motion.div
-  className="hero-latest-btn"
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.95 }}
-  onClick={() => window.scrollTo({ top: 2050, behavior: 'smooth' })}
->
-  <div>Bộ sưu tập mới nhất</div>
-  <img src={arrow_icon} alt="" />
-</motion.div>
-
+              className="hero-latest-btn"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => window.scrollTo({ top: 2050, behavior: 'smooth' })}
+            >
+              <div>Bộ sưu tập mới nhất</div>
+              <img src={arrow_icon} alt="" />
+            </motion.div>
+            
           </motion.div>
 
           {/* Hero Right */}

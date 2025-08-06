@@ -104,7 +104,7 @@ export const LoginSignup = () => {
         scaleMobile: 1.0,
         maxDistance: 15.0,
         color: 0xff677c,
-        backgroundColor: 0x25253c,
+        backgroundColor: 0x000000c,
       });
     }
 
@@ -149,7 +149,7 @@ export const LoginSignup = () => {
             state === "Đăng nhập" ? Login() : Signup();
           }}
         >
-          Continue
+          {state}
         </button>
 
         {/* Thêm phần đăng nhập bằng Google ở đây */}
@@ -194,13 +194,7 @@ export const LoginSignup = () => {
           </p>
         )}
 
-        <div className="loginsignup-agree">
-          <input type="checkbox" name="" />
-          <p>
-            Bằng cách tiếp tục, tôi đồng ý với các điều khoản sử dụng và chính
-            sách bảo mật.
-          </p>
-        </div>
+        
       </div>
     </div>
   );
